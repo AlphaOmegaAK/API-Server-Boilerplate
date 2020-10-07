@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
+const middleware = require('./middleware/middleware');
+
 // = Change as Needed for HTTP Requests
 app.use(cores({
     origin: ['http://localhost:3000'],
@@ -12,18 +14,21 @@ app.use(cores({
 }));
 
 // ? -- -- -- -- MiddleWare -- -- -- -- 
+app.use(middleware.notFound);
+app.use(middleware.errorHandler);
 app.use(express.urlencoded({extended: false}));
 
 app.use(express.json());
 
 // Logger
 app.use((req, res, next) => {
-    console.log(`${req.meth} ${req.url} ${req.Date().toLocaleTimeString()}`);
-})
+    console.log(`${req.method} ${req.url} ${req.Date().toLocaleTimeString()}`);
+});
 
 // ? -- -- -- -- Base Route URL's -- -- -- --
 app.use('/api/', routes.base);
 // http://localhost:PORT/api/
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
